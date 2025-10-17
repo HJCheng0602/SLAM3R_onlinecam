@@ -45,7 +45,7 @@ TL;DR: A real-time RGB SLAM system that performs dense 3D reconstruction via poi
 
 ## News
 
-* **2025-09:** We have released the code for **WebCam input** and **online reconstruction**.
+* **2025-10:** We have released the code for **online reconstruction and visualization**.
 
 * **2025-04:** SLAM3R is reported by [机器之心(Chinese)](https://mp.weixin.qq.com/s/fK5vJwbogcfwoduI9FuQ6w) 
 
@@ -134,13 +134,13 @@ When `--save_preds` is set in the script, the per-frame prediction for reconstru
 
 A Open3D window will appear after running the script. Please click `space key` to record the adjusted rendering view and close the window. The code will then do the rendering of the incremental reconstruction.
 
-You can also run SLAM3R on your self-captured video or [WebCam](https://github.com/shenyaocn/IP-Camera-Bridge) with the steps above. You can also select `offline/online` mode for reconstruction. Check the parameters in the [script](./scripts/demo_wild.sh) for more details.
+You can also run SLAM3R on your self-captured video with the steps above. You can also select `offline/online` mode for reconstruction. Check the parameters in the [script](./scripts/demo_wild.sh) for more details.
 
 Here are [more tips](./docs/recon_tips.md) for the argument settings in the reconstruction script.
 
 
 ## Gradio interface
-We also provide two Gradio interfaces for online/offline reconstruction respectively, where you can upload a directory, a video , specific images or a ipcamera's url (online only) to perform the reconstruction. After setting the reconstruction parameters, you can click the 'Run' button to start the process. Modifying the visualization parameters at the bottom allows you to directly display different visualization results without rerunning the inference.
+We also provide two Gradio interfaces for online/offline reconstruction respectively, where you can upload a directory, specific images or a video to perform the reconstruction. After setting the reconstruction parameters, you can click the 'Run' button to start the process. Modifying the visualization parameters at the bottom allows you to directly display different visualization results without rerunning the inference.
 
 The offline interface can be launched with the following command:
 
