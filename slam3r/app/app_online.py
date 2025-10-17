@@ -114,8 +114,9 @@ def recon_scene(i2p_model:Image2PointsModel,
                 # prepare for the next online reconstruction
                 milestone = init_num * keyframe_stride + 1
                 candi_frame_id = len(buffering_set_ids) # used for the reservoir sampling strategy
-                point_cloud_queue.put((per_frame_res["l2w_pcds"][current_frame_id][0], \
-                    rgb_imgs[current_frame_id], per_frame_res['l2w_confs'][current_frame_id]))   
+                for i in range(current_frame_id + 1):
+                    point_cloud_queue.put((per_frame_res["l2w_pcds"][i][0], \
+                        rgb_imgs[i], per_frame_res['l2w_confs'][i]))   
                 continue
 
             ref_ids, ref_ids_buffer = select_ids_as_reference(buffering_set_ids, current_frame_id,
@@ -188,8 +189,8 @@ def server_viser(args):
     )
 
     conf_thres_res = 12
-    num_points_per_frame = 10000
-    # max_num_points_all = 2000000
+    num_points_per_frame = 20000
+    max_num_points_all = 3000000
     
     while True:
         try:
@@ -201,6 +202,8 @@ def server_viser(args):
                 colors_buffer = np.zeros((0, 3), dtype=np.uint8)
                 point_cloud_handle.points = points_buffer
                 point_cloud_handle.colors = colors_buffer
+                history_points_total = 0
+                reserve_ratio = 1
                 continue
 
             new_frame_points_data, new_frame_colors_data, new_frame_confs_data = new_data
@@ -244,15 +247,27 @@ def server_viser(args):
                 else:
                     sampled_pts = filtered_points
                     sampled_colors = filtered_colors
+
+                history_points_total += n_samples
+                now_total_num = len(points_buffer) + n_samples
+                
+                if now_total_num > max_num_points_all * 1.2: # avoid frequent sampling
+                    target_ratio = max_num_points_all / history_points_total
+                    sample_buffer_ratio = target_ratio / reserve_ratio
+                    choice = np.random.choice(len(points_buffer), int(len(points_buffer)*sample_buffer_ratio), replace=False)
+                    points_buffer = points_buffer[choice]
+                    colors_buffer = colors_buffer[choice]
+                    choice = np.random.choice(n_samples, int(n_samples*target_ratio), replace=False)
+                    sampled_pts = sampled_pts[choice]
+                    sampled_colors = sampled_colors[choice]
+                
                 points_buffer = np.concatenate((points_buffer, sampled_pts), axis=0)
                 colors_buffer = np.concatenate((colors_buffer, sampled_colors), axis=0)
-
-                # if len(points_buffer) > max_num_points_all * 1.5: # avoid frequent sampling
-                #     choice = np.random.choice(len(points_buffer), max_num_points_all, replace=False)
-                #     points_buffer = points_buffer[choice]
-                #     colors_buffer = colors_buffer[choice]
+                                
                 point_cloud_handle.points = points_buffer
                 point_cloud_handle.colors = colors_buffer
+
+                reserve_ratio = len(points_buffer)/history_points_total
             
                 print(f"Viser: point cloud updated with {n_samples} new points,\
                     total {len(points_buffer)} points now.")
@@ -320,11 +335,7 @@ def get_model_from_scene(per_frame_res, save_dir,
     sampled_pts = res_pcds[sampled_idx]
     sampled_rgbs = res_rgbs[sampled_idx]
     
-    sampled_pts[:, 0] *= -1 # flip the z-axis for better visualization
-    sampled_pts[:, 1] *= 1
-    
-    
-    sampled_pts[:, :] *= -1
+    sampled_pts[..., 1:] *= -1 # flip the axis for better visualization
     
     save_name = f"recon.glb"
     scene = trimesh.Scene()
