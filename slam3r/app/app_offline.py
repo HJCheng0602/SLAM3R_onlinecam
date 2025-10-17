@@ -371,7 +371,8 @@ def get_model_from_scene(per_frame_res, save_dir,
     sampled_idx = np.random.choice(valid_ids, n_samples, replace=False)
     sampled_pts = res_pcds[sampled_idx]
     sampled_rgbs = res_rgbs[sampled_idx]
-    sampled_pts *= -1 # flip the axis for better visualization
+    sampled_pts[:, 0] *= -1 # flip the z-axis for better visualization
+    sampled_pts[:, 1] *= -1
     
     save_name = f"recon.glb"
     scene = trimesh.Scene()

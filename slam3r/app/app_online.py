@@ -174,6 +174,7 @@ def server_viser(args):
     
     server = viser.ViserServer(host=server_name, port=args.viser_server_port, verbose=False)
     global viser_server_url
+    server.gui.reset()
     viser_server_url = f"http://{server.get_host()}:{server.get_port()}"
     
     points_buffer = np.zeros((0, 3), dtype=np.float32)
@@ -319,7 +320,11 @@ def get_model_from_scene(per_frame_res, save_dir,
     sampled_pts = res_pcds[sampled_idx]
     sampled_rgbs = res_rgbs[sampled_idx]
     
-    sampled_pts *= -1 # flip the axis for better visualization
+    sampled_pts[:, 0] *= -1 # flip the z-axis for better visualization
+    sampled_pts[:, 1] *= 1
+    
+    
+    sampled_pts[:, :] *= -1
     
     save_name = f"recon.glb"
     scene = trimesh.Scene()
@@ -430,7 +435,7 @@ def main_demo(i2p_model, l2w_model, device, tmpdirname, server_name, server_port
         with gradio.Column():
             with gradio.Row():
                 with gradio.Column():
-                    input_type = gradio.Dropdown([ "directory", "images", "video", "webcamera"],
+                    input_type = gradio.Dropdown([ "directory", "images", "video"],
                                                 scale=1,
                                                 value='directory', label="select type of input files")
                     frame_extract_interval = gradio.Number(value=1,
