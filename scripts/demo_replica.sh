@@ -35,5 +35,5 @@ python recon.py \
 --num_points_save $NUM_POINTS_SAVE \
 --update_buffer_intv $UPDATE_BUFFER_INTV \
 --max_num_register $MAX_NUM_REGISTER \
---online \
+# --online \
 --retrieve_freq 10 \
