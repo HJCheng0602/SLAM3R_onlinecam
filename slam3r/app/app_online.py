@@ -446,7 +446,7 @@ def main_demo(i2p_model, l2w_model, device, tmpdirname, server_name, server_port
         with gradio.Column():
             with gradio.Row():
                 with gradio.Column():
-                    input_type = gradio.Dropdown([ "directory", "images", "video"],
+                    input_type = gradio.Dropdown([ "directory", "images", "video", "web camera"],
                                                 scale=1,
                                                 value='directory', label="select type of input files")
                     frame_extract_interval = gradio.Number(value=1,
