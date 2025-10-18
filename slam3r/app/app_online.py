@@ -393,7 +393,7 @@ def change_inputfile_type(input_type):
                                  label="Upload a mp4 video", visible=True, value=None)
         update_video_fps = gradio.update(interactive=True, scale=1, visible=True, value=5) 
         image_gallery = gradio.update(visible=False)
-    elif input_type == "webcamera":
+    elif input_type == "web camera":
         update_external_webcam_html = gradio.update(visible=True)
         update_url = gradio.update(visible=True)
         update_video_fps = gradio.update(interactive=True, scale = 1, visible=True, value = 5)
