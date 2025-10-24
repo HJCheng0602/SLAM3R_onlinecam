@@ -33,7 +33,7 @@ def recon_scene(i2p_model:Image2PointsModel,
     # num_views = 0
     adj_distance = keyframe_stride
     source = ""
-    if files_type == "webcamera":
+    if files_type == "web camera":
         source = video_url.value
     else:
         source = img_dir_or_list

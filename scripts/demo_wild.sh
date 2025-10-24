@@ -54,4 +54,4 @@ python recon.py \
 --keyframe_adapt_stride $KEYFRAME_ADAPT_STRIDE \
 --retrieve_freq $RETRIEVE_FREQ \
 --save_preds \
-# --online  # Uncomment it if you want to reconstruct it online
+--online  # Uncomment it if you want to reconstruct it online
