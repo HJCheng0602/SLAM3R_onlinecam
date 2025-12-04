@@ -19,6 +19,8 @@ The single, crucial feature introduced in this improved version is:
 
 ---
 #### Demo
+- first run `python app.py --online` to open the gradio interface.
+
 To leverage your mobile device camera for reconstruction from **any location**, follow these steps within the Gradio interface:
 
 1.  **Locate the Input Type Menu:**
